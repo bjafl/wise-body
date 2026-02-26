@@ -1,17 +1,11 @@
 import { useState } from 'react';
-import * as Icons from 'lucide-react';
 import type { ActivityTemplate, ActivityCategory } from '@/types';
 import { CATEGORY_LABELS } from '@/types';
-import type { LucideIcon } from 'lucide-react';
+import ActivityCardSmall from './ActivityCardSmall';
 
 interface ActivityPickerProps {
   templates: ActivityTemplate[];
   onSelect: (template: ActivityTemplate, adjustedCost: number) => void;
-}
-
-function getIcon(name: string): LucideIcon {
-  const icon = (Icons as Record<string, LucideIcon>)[name];
-  return icon ?? Icons.Circle;
 }
 
 export function ActivityPicker({ templates, onSelect }: ActivityPickerProps) {
@@ -74,40 +68,13 @@ export function ActivityPicker({ templates, onSelect }: ActivityPickerProps) {
 
       {/* Activity grid */}
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-        {filtered.map((template) => {
-          const Icon = getIcon(template.icon);
-          const isGain = template.type === 'gain';
-
-          return (
-            <button
-              key={template.id}
-              onClick={() => handleTap(template)}
-              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all
-                hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm
-                ${
-                  isGain
-                    ? 'border-energy-full/30 bg-energy-full/5 hover:border-energy-full/50'
-                    : 'border-border bg-card hover:border-primary/30'
-                }`}
-            >
-              <Icon
-                size={22}
-                className={isGain ? 'text-energy-full' : 'text-muted-foreground'}
-              />
-              <span className="text-xs font-medium text-center leading-tight line-clamp-2">
-                {template.name}
-              </span>
-              <span
-                className={`text-xs font-bold ${
-                  isGain ? 'text-energy-full' : 'text-energy-low'
-                }`}
-              >
-                {isGain ? '+' : '−'}
-                {template.defaultCost}
-              </span>
-            </button>
-          );
-        })}
+        {filtered.map((template) => (
+          <ActivityCardSmall
+            key={template.id}
+            template={template}
+            onClick={handleTap}
+          />
+        ))}
       </div>
 
       {/* Adjustment modal */}
@@ -119,7 +86,8 @@ export function ActivityPicker({ templates, onSelect }: ActivityPickerProps) {
                 {adjustingTemplate.name}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Juster energi{adjustingTemplate.type === 'gain' ? 'gevinst' : 'kostnad'}
+                Juster energi
+                {adjustingTemplate.type === 'gain' ? 'gevinst' : 'kostnad'}
               </p>
             </div>
 
@@ -154,7 +122,9 @@ export function ActivityPicker({ templates, onSelect }: ActivityPickerProps) {
                 onClick={handleConfirm}
                 className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
               >
-                {adjustingTemplate.type === 'gain' ? 'Legg til energi' : 'Registrer'}
+                {adjustingTemplate.type === 'gain'
+                  ? 'Legg til energi'
+                  : 'Registrer'}
               </button>
             </div>
           </div>
