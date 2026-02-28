@@ -1,0 +1,25 @@
+{
+  "app": { "name": "Wise Body" },
+  "nav": {
+    "home": "Home",
+    "energy": "Energy",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "delete": "Delete",
+    "edit": "Edit",
+    "next": "Next",
+    "done": "Done"
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  },
+  "dates": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  }
+}

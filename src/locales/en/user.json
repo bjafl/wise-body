@@ -1,0 +1,15 @@
+{
+  "profile": {
+    "title": "Profile",
+    "displayName": "Display name",
+    "email": "Email",
+    "language": "Language"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "data": "Data",
+    "about": "About"
+  }
+}
