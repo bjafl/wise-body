@@ -1,99 +1,124 @@
-# Energiregnskap
+# Wise Body
 
-En norskspråklig webapp for energiregnskap / energy envelope management, bygget for personer med fatigue, ME/CFS, fibromyalgi, long COVID og lignende energibegrensende tilstander.
+A modular health and habit tracking application. Currently in early development as a web app, with a roadmap toward PWA and native mobile (iOS/Android via Capacitor).
 
-Basert på **Energy Envelope Theory** (Leonard Jason, DePaul University) og prinsipper fra ergoterapifaglig energiøkonomisering.
+## Overview
 
-## Tech stack
+Energi is built around the concept of modular health tracking — each "module" covers a specific tracking domain (energy enveloping, pain, mood, etc.). Users manage their own templates and categories within each module, and log daily entries against those templates.
 
-- **React 19** + TypeScript
-- **Vite** som build tool
-- **Tailwind CSS v4** for styling
-- **Lucide React** for ikoner
-- **Recharts** for grafer (klar for trend-dashboard)
-- **idb** (IndexedDB wrapper) for lokal datalagring
-- **date-fns** for datohåndtering med norsk locale
+The first module implements **energy envelope tracking**: a daily energy budget system where users log activities that cost or restore energy, helping manage chronic fatigue and pacing.
 
-## Arkitektur
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | React 19 + TypeScript |
+| Build tool | Vite |
+| Styling | Tailwind CSS + shadcn/ui |
+| Routing | React Router (hash-based) |
+| State | Zustand |
+| Local storage | IndexedDB via `idb` |
+| i18n | i18next + react-i18next |
+| Validation | Zod |
+| Future backend | Supabase (Postgres + Auth) |
+| Future native | Capacitor (iOS + Android) |
+
+## Project Structure
 
 ```
 src/
-├── types/              # Domenemodell og StorageAdapter-interface
-│   └── index.ts
-├── lib/
-│   ├── storage/        # Storage-abstraksjon (repository pattern)
-│   │   ├── index.ts    # getStorage() - bytter mellom backends
-│   │   └── idb-storage.ts   # IndexedDB-implementasjon
-│   ├── hooks/          # React hooks for state management
-│   │   └── useEnergy.ts     # Profile, templates, entries, day summary
-│   ├── default-templates.ts # Forhåndsdefinerte aktiviteter
-│   └── utils.ts        # Utility-funksjoner
-├── components/
-│   ├── energy/         # Energi-visualisering
-│   │   └── EnergyGauge.tsx
-│   ├── activity/       # Aktivitetsregistrering
-│   │   ├── ActivityPicker.tsx
-│   │   └── ActivityLog.tsx
-│   ├── Onboarding.tsx  # Førstegangsoppsett
-│   ├── DayView.tsx     # Hovedside (dagsvisning)
-│   └── SettingsView.tsx
-├── App.tsx             # Root med view-routing
-├── main.tsx            # Entry point
-└── index.css           # Tailwind + tema-variabler
+├── assets/
+├── config/          # Env vars, constants, module registry
+├── types/           # All TypeScript types (frontend + DB + i18n)
+├── schemas/         # Zod validation schemas (mirrors types/)
+├── lib/             # Third-party wrappers (idb, supabase, platform, i18n)
+├── locales/         # Translation files per language and namespace
+├── services/        # Storage adapters (local + supabase)
+│   ├── storage/     # Adapter interfaces and switching logic
+│   ├── modules/     # Per-module adapters (local + supabase)
+│   └── sync/        # Cache sync service (added with Supabase)
+├── hooks/           # Shared hooks (auth, user, categories, sync status)
+├── store/           # Zustand stores (auth, user, sync)
+├── modules/         # Feature modules (energy, pain, ...)
+│   └── [module]/
+│       ├── components/
+│       ├── hooks/
+│       ├── utils/
+│       ├── defaults/    # Locale-specific default templates and categories
+│       ├── onboarding/  # Onboarding wizard for first-time module setup
+│       └── index.ts
+├── components/      # Shared UI (primitives, layout, domain)
+├── pages/           # Route-level components
+├── router/          # Route definitions and guards
+├── utils/           # Pure utility functions
+└── styles/          # Global CSS
 ```
 
-### Storage-abstraksjon (repository pattern)
+See [ROADMAP.md](./ROADMAP.md) for development phases and task breakdown.
 
-All datalagring går gjennom et `StorageAdapter`-interface:
+## Modules
 
-```typescript
-interface StorageAdapter {
-  getProfile(): Promise<EnergyProfile | null>;
-  saveProfile(profile: EnergyProfile): Promise<void>;
-  getTemplates(): Promise<ActivityTemplate[]>;
-  // ...
-}
-```
+| Module | Status | Description |
+|---|---|---|
+| Energy | 🚧 In development | Daily energy budget and activity logging |
+| Pain | 📋 Planned | Body pain location and intensity tracking |
+| Mood | 📋 Planned | Mood and wellbeing tracking |
 
-For å legge til Supabase/Firebase: implementer dette interfacet og bytt i `lib/storage/index.ts`.
+## Internationalisation
 
-### Native-app veien
+The app uses `i18next` with `react-i18next`. Translations are split by module namespace so each module owns its strings. Supported languages are defined in `lib/i18n.ts`.
 
-Koden er strukturert for enkel overgang til Capacitor:
+Translation keys are type-safe — `types/i18n.ts` declares the resource shape from the English source files, giving IDE autocomplete and compile-time errors for missing keys.
 
-1. Ingen browser-spesifikke APIer utover IndexedDB (som Capacitor støtter)
-2. Mobil-first layout med `viewport-fit=cover`
-3. Touch-vennlige interaksjoner (store klikkmål)
+**Supported languages**
 
-```bash
-npm install @capacitor/core @capacitor/cli
-npx cap init
-npx cap add ios && npx cap add android
-```
+| Code | Language |
+|---|---|
+| `en` | English |
+| `nb` | Norwegian Bokmål |
 
-## Kom i gang
+### Default templates and onboarding
+
+Default templates and categories are **data, not translation strings**. Each module has a `defaults/` directory with locale-specific seed files (`en.ts`, `nb.ts`, etc.). When a user first opens a module, the onboarding wizard runs, detects their locale, and seeds their personal template store with localized defaults. After seeding, the templates belong to the user and can be edited freely.
+
+Each module includes an onboarding wizard (`onboarding/`) that collects user-specific preferences (e.g. daily energy budget, pain scale) before seeding defaults. The router guards redirect to the wizard on first visit to a module.
+
+## Data Architecture
+
+The app uses a **storage adapter pattern** — all data access goes through typed adapters with a consistent interface. The active adapter (local IndexedDB or Supabase) is selected via environment variable, with no changes required in hooks or components.
+
+Frontend types are kept separate from DB/backend types. DB metadata (`userId`, `createdAt`, `updatedAt`) is attached and stripped at the adapter layer, keeping components clean.
+
+Templates and categories carry `isDefault` and `sourceLocale` flags to indicate they were seeded by onboarding, which supports future reset and re-seeding functionality.
+
+## Getting Started
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Neste steg (roadmap)
+### Environment variables
 
-### Kort sikt
-- [ ] Trend-dashboard med ukentlig/månedlig oversikt (Recharts)
-- [ ] Redigering av aktivitetstemplater
-- [ ] Egendefinerte aktiviteter
-- [ ] Notat-felt på registreringer
+```bash
+# .env.local
+VITE_USE_SUPABASE=false
+```
 
-### Middels sikt
-- [ ] Supabase-backend for synkronisering
-- [ ] PWA (service worker, offline, install prompt)
-- [ ] Eksport av data (CSV/PDF) for deling med behandler
-- [ ] Crash/PEM-markering med retrospektiv analyse
+## Security & Privacy
 
-### Lang sikt
-- [ ] Capacitor-wrapper for iOS/Android
-- [ ] Integrasjon med helsedata (Apple Health / Google Fit)
-- [ ] Pulsovervåking for automatisk pacing
-- [ ] Deling med behandler/ergoterapeut via sikker lenke
+All user input is validated with Zod schemas at the adapter boundary before being written to storage. When online sync is added, Supabase Row Level Security enforces data isolation at the database level. Auth tokens are stored in `HttpOnly` cookies. CSP headers are added at the Netlify deployment layer.
+
+See [SECURITY.md](./SECURITY.md) for the full security architecture, local cache strategy, and GDPR compliance outline.
+
+## Local Cache Strategy
+
+When Supabase is enabled, IndexedDB continues to function as a local cache for offline support and low-latency reads. A `syncStatus` field on cached records tracks sync state (`synced | pending | conflict`). Writes go local-first with async remote sync. Full cache sync runs on login and app foreground.
+
+## Platform Targets
+
+- **Web app** — current target
+- **PWA** — next step (offline support, home screen install)
+- **iOS / Android** — via Capacitor (planned)
+
+All platform-specific APIs are abstracted behind `lib/platform.ts` to keep this transition low-friction.
