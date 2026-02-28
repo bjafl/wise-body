@@ -1,17 +1,20 @@
 // === Core domain types for energy accounting ===
 
-export interface EnergyProfile {
+export interface EntryBase {
   id: string;
+  // userId: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+export interface EnergyProfile extends EntryBase {
   /** Daily energy budget (arbitrary unit, user-defined scale) */
   dailyBudget: number;
   /** Scale label, e.g. "poeng" or "spoons" */
   scaleUnit: string;
-  createdAt: string;
   updatedAt: string;
 }
 
-export interface ActivityTemplate {
-  id: string;
+export interface ActivityTemplate extends EntryBase {
   name: string;
   /** Default energy cost for this activity */
   defaultCost: number;
@@ -23,7 +26,6 @@ export interface ActivityTemplate {
   type: 'cost' | 'gain';
   /** User-defined sort order */
   sortOrder: number;
-  createdAt: string;
 }
 
 export type ActivityCategory =
@@ -58,8 +60,7 @@ export const CATEGORY_ICONS: Record<ActivityCategory, string> = {
   other: 'MoreHorizontal',
 };
 
-export interface ActivityEntry {
-  id: string;
+export interface ActivityEntry extends EntryBase {
   templateId: string | null;
   /** Custom name if not using a template */
   name: string;
@@ -76,7 +77,6 @@ export interface ActivityEntry {
   durationMinutes: number | null;
   /** Optional user note */
   note: string;
-  createdAt: string;
 }
 
 export interface DaySummary {

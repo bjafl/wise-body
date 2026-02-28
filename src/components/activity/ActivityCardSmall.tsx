@@ -1,8 +1,11 @@
 import type { ActivityTemplate } from '@/types';
-import type { FC } from 'react';
+import type { FC, RefObject } from 'react';
 import * as Icons from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useContextMenu } from '@/hooks/useContextMenu';
+import ContextMenuButton from '../ContextMenuButton';
+import { cn } from '@/lib/utils';
+import FlipButton from '../FlipButton';
 
 function getIcon(name: string): LucideIcon {
   const icon = (Icons as unknown as Record<string, LucideIcon>)[name];
@@ -12,22 +15,24 @@ function getIcon(name: string): LucideIcon {
 const ActivityCardSmall: FC<{
   template: ActivityTemplate;
   onClick: (template: ActivityTemplate) => void;
-}> = ({ template, onClick }) => {
-  const { handleContextMenu } = useContextMenu();
+  containerRef: RefObject<HTMLDivElement | null>;
+}> = ({ template, containerRef, onClick }) => {
   const Icon = getIcon(template.icon);
   const isGain = template.type === 'gain';
 
   return (
-    <button
-      onContextMenu={handleContextMenu}
+    <FlipButton
+      containerRef={containerRef}
       onClick={() => onClick(template)}
-      className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all
-                hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm
-                ${
-                  isGain
-                    ? 'border-energy-full/30 bg-energy-full/5 hover:border-energy-full/50'
-                    : 'border-border bg-card hover:border-primary/30'
-                }`}
+      className={cn(
+        'flex flex-col w-full h-full items-center',
+        'gap-1.5 p-3 rounded-xl border transition-all text-foreground',
+        'hover:shadow-md hover:-translate-y-0.5',
+        'active:translate-y-0 active:shadow-sm',
+        isGain
+          ? 'border-energy-full/30 bg-energy-full/5 hover:border-energy-full/50'
+          : 'border-border bg-card text-card-foreground hover:border-primary/30 hover:bg-card/80'
+      )}
     >
       <Icon
         size={22}
@@ -44,7 +49,7 @@ const ActivityCardSmall: FC<{
         {isGain ? '+' : '-'}
         {template.defaultCost}
       </span>
-    </button>
+    </FlipButton>
   );
 };
 

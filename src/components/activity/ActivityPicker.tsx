@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { ActivityTemplate, ActivityCategory } from '@/types';
 import { CATEGORY_LABELS } from '@/types';
 import ActivityCardSmall from './ActivityCardSmall';
@@ -15,6 +15,7 @@ export function ActivityPicker({ templates, onSelect }: ActivityPickerProps) {
   const [adjustingTemplate, setAdjustingTemplate] =
     useState<ActivityTemplate | null>(null);
   const [adjustedValue, setAdjustedValue] = useState(0);
+  const activityGridRef = useRef<HTMLDivElement | null>(null);
 
   const categories = Array.from(
     new Set(templates.map((t) => t.category))
@@ -67,9 +68,13 @@ export function ActivityPicker({ templates, onSelect }: ActivityPickerProps) {
       </div>
 
       {/* Activity grid */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+      <div
+        ref={activityGridRef}
+        className="grid grid-cols-3 sm:grid-cols-4 gap-2"
+      >
         {filtered.map((template) => (
           <ActivityCardSmall
+            containerRef={activityGridRef}
             key={template.id}
             template={template}
             onClick={handleTap}
