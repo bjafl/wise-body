@@ -41,6 +41,8 @@ COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/packages/db/prisma ./packages/db/prisma
 COPY --from=builder /app/packages/db/prisma.config.ts ./packages/db/prisma.config.ts
 COPY --from=builder /app/packages/db/package.json ./packages/db/package.json
+# pnpm does not hoist prisma to root node_modules; copy the package-local bin
+COPY --from=builder /app/packages/db/node_modules ./packages/db/node_modules
 
 EXPOSE 3000
 
