@@ -9,14 +9,22 @@ import sensible from '@fastify/sensible'
 import prismaPlugin from './plugins/prisma.js'
 import authRoutes from './routes/auth.js'
 import energyRoutes from './routes/energy.js'
+import adminRoutes from './routes/admin.js'
 
 const app = Fastify({
   logger: { level: process.env.LOG_LEVEL ?? 'info' },
 })
 
 // ─── Core plugins ─────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  process.env.CORS_ORIGIN ?? 'http://localhost:5173',
+  ...(process.env.ADMIN_CORS_ORIGIN ? [process.env.ADMIN_CORS_ORIGIN] : []),
+]
 await app.register(cors, {
-  origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) cb(null, true)
+    else cb(new Error('Not allowed by CORS'), false)
+  },
   credentials: true,
 })
 await app.register(cookie, { secret: process.env.COOKIE_SECRET })
@@ -27,6 +35,7 @@ await app.register(prismaPlugin)
 // ─── Routes ───────────────────────────────────────────────────────────────────
 await app.register(authRoutes, { prefix: '/api/auth' })
 await app.register(energyRoutes, { prefix: '/api/energy' })
+await app.register(adminRoutes, { prefix: '/api/admin' })
 
 app.get('/health', async () => ({ status: 'ok' }))
 
