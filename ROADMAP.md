@@ -10,14 +10,14 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 
 > Goal: correct scaffolding before writing any feature code.
 
-- [ ] Configure Vite with `@` path alias (`vite.config.ts` + `tsconfig.json`)
-- [ ] Install core dependencies: `idb`, `uuid`, `react-router-dom`, `zustand`, `zod`
-- [ ] Install i18n dependencies: `i18next`, `react-i18next`, `i18next-browser-languagedetector`
-- [ ] Initialize shadcn (`npx shadcn@latest init`)
-- [ ] Set up `src/types/` directory with all type files as designed (including `i18n.ts`)
-- [ ] Configure `globals.css` — Tailwind base, `100dvh`, `overscroll-behavior`, tap highlight
-- [ ] Set `index.html` meta tags — viewport, PWA, apple-mobile-web-app, theme-color
-- [ ] Add `public/manifest.json` stub (name, icons, theme color, display: standalone)
+- [x] Configure Vite with `@` path alias (`vite.config.ts` + `tsconfig.json`)
+- [x] Install core dependencies: `idb`, `uuid`, `react-router-dom`, `zustand`, `zod`
+- [x] Install i18n dependencies: `i18next`, `react-i18next`, `i18next-browser-languagedetector`
+- [x] Initialize shadcn (`npx shadcn@latest init`)
+- [x] Set up `src/types/` directory with all type files as designed (including `i18n.ts`)
+- [x] Configure `globals.css` — Tailwind base, `100dvh`, `overscroll-behavior`, tap highlight
+- [x] Set `index.html` meta tags — viewport, PWA, apple-mobile-web-app, theme-color
+- [x] Add `public/manifest.json` stub (name, icons, theme color, display: standalone)
 
 ---
 
@@ -25,17 +25,17 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 
 > Goal: data layer, platform abstraction, and auth stub in place.
 
-- [ ] `lib/idb.ts` — `getDB()` singleton with full `AppDB` schema and all object stores/indexes
-- [ ] `lib/platform.ts` — platform detection stub (`isCapacitor`, `vibrate`, expand later)
-- [ ] `lib/supabase.ts` — stubbed out, commented, ready to uncomment when needed
-- [ ] `config/env.ts` — typed wrappers for all `import.meta.env` variables
-- [ ] `.env.local` — `VITE_USE_SUPABASE=false`, confirm in `.gitignore`
-- [ ] `services/storage/types.ts` — `StorageAdapter<T>` interface
-- [ ] `schemas/` directory — Zod schemas mirroring all frontend types (see SNIPPETS.md)
-- [ ] Core local adapters: `userAdapter`, `categoryAdapter`, `modulePreferencesAdapter`
-- [ ] `store/authStore.ts` — Zustand store, `userId` hardcoded to `'local'` for now, `locale` from i18n
-- [ ] `store/userStore.ts` — includes `onboardedModules: ModuleId[]`
-- [ ] `hooks/useAuth.ts`, `hooks/useCategories.ts`, `hooks/useModulePreferences.ts`
+- [x] `lib/idb.ts` — `getDB()` singleton with full `AppDB` schema and all object stores/indexes
+- [x] `lib/platform.ts` — platform detection stub (`isCapacitor`, `vibrate`, expand later)
+- [x] `lib/supabase.ts` — stubbed out, commented, ready to uncomment when needed
+- [x] `config/env.ts` — typed wrappers for all `import.meta.env` variables
+- [x] `.env.local` — `VITE_USE_SUPABASE=false`, confirm in `.gitignore`
+- [x] `services/storage/types.ts` — `StorageAdapter<T>` interface
+- [x] `schemas/` directory — Zod schemas mirroring all frontend types (see SNIPPETS.md)
+- [x] Core local adapters: `userAdapter`, `categoryAdapter`, `modulePreferencesAdapter`
+- [x] `store/authStore.ts` — Zustand store, `userId` hardcoded to `'local'` for now, `locale` from i18n
+- [x] `store/userStore.ts` — includes `onboardedModules: ModuleId[]`
+- [x] `hooks/useAuth.ts`, `hooks/useCategories.ts`, `hooks/useModulePreferences.ts`
 
 ---
 
@@ -43,14 +43,14 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 
 > Goal: i18n fully wired before building any UI strings, so nothing needs retrofitting.
 
-- [ ] `lib/i18n.ts` — i18next init, language detector, namespace config, fallback to `en`
-- [ ] `types/i18n.ts` — type-safe key declarations from English source files
-- [ ] Wire `i18n.ts` import into `main.tsx` before `RouterProvider`
-- [ ] Create `locales/en/` and `locales/nb/` directories
-- [ ] `locales/en/common.json` — buttons, errors, dates, navigation, generic UI
-- [ ] `locales/nb/common.json`
-- [ ] `locales/en/user.json` — profile, settings strings
-- [ ] `locales/nb/user.json`
+- [x] `lib/i18n.ts` — i18next init, language detector, namespace config, fallback to `en`
+- [x] `types/i18n.ts` — type-safe key declarations from English source files
+- [x] Wire `i18n.ts` import into `main.tsx` before `RouterProvider`
+- [x] Create `locales/en/` and `locales/nb/` directories
+- [x] `locales/en/common.json` — buttons, errors, dates, navigation, generic UI
+- [x] `locales/nb/common.json`
+- [x] `locales/en/user.json` — profile, settings strings
+- [x] `locales/nb/user.json`
 - [ ] Language selector component in settings (`components/shared/LanguageSelector.tsx`)
 - [ ] Persist language choice to `userProfile.locale` via user adapter
 - [ ] Verify language detection order: stored preference → browser language → fallback `en`
@@ -61,15 +61,15 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 
 > Goal: navigable app skeleton with correct mobile layout.
 
-- [ ] `router/routes.ts` — `ROUTES` constants
-- [ ] `router/guards.tsx` — `ModuleGuard` that redirects to onboarding if module not yet set up
-- [ ] `router/index.tsx` — `createHashRouter` with `AppShell` as root layout, onboarding routes per module
-- [ ] `components/layout/AppShell.tsx` — flex column, `100dvh`, scroll inside main
-- [ ] `components/layout/TopBar.tsx` — title, back button placeholder
-- [ ] `components/layout/BottomNav.tsx` — safe area inset padding, active NavLink styling
-- [ ] `components/layout/PageContainer.tsx` — consistent page padding wrapper
-- [ ] Stub pages: `HomePage`, `SettingsPage`, `ProfilePage`, `EnergyPage`, `PainPage`
-- [ ] `main.tsx` — wire up `RouterProvider`
+- [x] `router/routes.ts` — `ROUTES` constants
+- [x] `router/guards.tsx` — `ModuleGuard` that redirects to onboarding if module not yet set up
+- [x] `router/index.tsx` — `createHashRouter` with `AppShell` as root layout, onboarding routes per module
+- [x] `components/layout/AppShell.tsx` — flex column, `100dvh`, scroll inside main
+- [x] `components/layout/TopBar.tsx` — title, back button placeholder
+- [x] `components/layout/BottomNav.tsx` — safe area inset padding, active NavLink styling
+- [x] `components/layout/PageContainer.tsx` — consistent page padding wrapper
+- [x] Stub pages: `HomePage`, `SettingsPage`, `ProfilePage`, `EnergyPage`, `PainPage`
+- [x] `main.tsx` — wire up `RouterProvider`
 - [ ] Verify layout on mobile viewport in browser devtools
 
 ---
@@ -92,45 +92,51 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 
 > Goal: first fully working module, end to end, with onboarding and localised defaults.
 
-**Translations**
-- [ ] `locales/en/energy.json` — all energy module strings
-- [ ] `locales/nb/energy.json`
+### Translations
 
-**Default templates**
-- [ ] `modules/energy/defaults/types.ts` — `EnergyDefaults` interface
-- [ ] `modules/energy/defaults/en.ts` — English default categories and templates
-- [ ] `modules/energy/defaults/nb.ts` — Norwegian default categories and templates
-- [ ] `modules/energy/defaults/index.ts` — `getEnergyDefaults(locale)` loader
+- [x] `locales/en/energy.json` — all energy module strings
+- [x] `locales/nb/energy.json`
 
-**Onboarding wizard**
-- [ ] `modules/energy/onboarding/useEnergyOnboarding.ts` — wizard state, preference saving, template seeding
-- [ ] `modules/energy/onboarding/steps/WelcomeStep.tsx`
+### Default templates
+
+- [x] `modules/energy/defaults/types.ts` — `EnergyDefaults` interface (with `categoryIndex` for seeding)
+- [x] `modules/energy/defaults/en.ts` — English default categories and templates
+- [x] `modules/energy/defaults/nb.ts` — Norwegian default categories and templates
+- [x] `modules/energy/defaults/index.ts` — `getEnergyDefaults(locale)` loader
+
+### Onboarding wizard
+
+- [x] `modules/energy/onboarding/useEnergyOnboarding.ts` — wizard state, preference saving, template seeding
+- [ ] `modules/energy/onboarding/steps/WelcomeStep.tsx` — (implemented inline in wizard for now)
 - [ ] `modules/energy/onboarding/steps/BudgetSetupStep.tsx`
 - [ ] `modules/energy/onboarding/steps/ScheduleStep.tsx`
 - [ ] `modules/energy/onboarding/steps/DefaultTemplatesStep.tsx` — preview seeded templates before confirming
-- [ ] `modules/energy/onboarding/EnergyOnboardingWizard.tsx`
-- [ ] Wire onboarding route and `ModuleGuard` for energy
+- [x] `modules/energy/onboarding/EnergyOnboardingWizard.tsx`
+- [x] Wire onboarding route and `ModuleGuard` for energy
 
-**Storage adapters**
-- [ ] `services/modules/energy/local/energyTemplateAdapter.ts`
-- [ ] `services/modules/energy/local/energyEntryAdapter.ts`
-- [ ] `services/modules/energy/local/energyDailySummaryAdapter.ts`
+### Storage adapters
 
-**Hooks**
+- [x] `services/storage/local/energyTemplateAdapter.ts` _(path differs from plan — kept in core storage layer)_
+- [x] `services/storage/local/energyEntryAdapter.ts`
+- [ ] `energyDailySummaryAdapter.ts`
+
+### Hooks
+
 - [ ] `modules/energy/hooks/useEnergyTemplates.ts`
 - [ ] `modules/energy/hooks/useEnergyEntries.ts`
 - [ ] `modules/energy/hooks/useEnergyDailySummary.ts`
 - [ ] `modules/energy/hooks/useEnergyPreferences.ts`
 
-**Components and utils**
-- [ ] `modules/energy/utils/energyCalculations.ts`
-- [ ] `modules/energy/components/EnergyDashboard.tsx`
+### Components and utils
+
+- [x] `modules/energy/utils/energyCalculations.ts`
+- [ ] `modules/energy/components/EnergyDashboard.tsx` — (basic dashboard inline in `EnergyPage` for now)
 - [ ] `modules/energy/components/EnergyBudgetBar.tsx`
 - [ ] `modules/energy/components/EnergyEntryForm.tsx`
 - [ ] `modules/energy/components/EnergyEntryList.tsx`
 - [ ] `modules/energy/components/EnergyTemplateEditor.tsx`
-- [ ] `modules/energy/index.ts`
-- [ ] Wire into `EnergyPage.tsx`
+- [x] `modules/energy/index.ts`
+- [x] Wire into `EnergyPage.tsx`
 
 ---
 
@@ -166,7 +172,8 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 
 > Goal: multi-device sync, persistent auth, data safety, offline-capable cache.
 
-**Backend setup**
+### Backend setup
+
 - [ ] Create Supabase project — select EU (Frankfurt) region
 - [ ] Write SQL schema migrations (tables, indexes, RLS policies)
 - [ ] Sign Supabase Data Processing Agreement (GDPR requirement)
@@ -178,7 +185,8 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 - [ ] Persist `locale` from `userProfile` on login, sync with i18next
 - [ ] Test RLS: verify users cannot access each other's data
 
-**Local cache layer**
+### Local cache layer
+
 - [ ] Add `syncStatus: 'synced' | 'pending' | 'conflict'` field to all `*Record` DB types
 - [ ] Add `syncedAt?: string` to `DBMetadata`
 - [ ] `services/sync/syncService.ts` — full sync on login, background sync on app foreground
@@ -188,7 +196,8 @@ Current target is a functional web app. PWA and Capacitor come after the core is
 - [ ] Settings option: clear local cache on logout (privacy vs convenience)
 - [ ] `hooks/useSyncStatus.ts` — exposes pending count and last sync time to UI
 
-**Security hardening**
+### Security hardening
+
 - [ ] CSP headers via `public/_headers` (Netlify)
 - [ ] Verify `HttpOnly` cookie auth is active in Supabase Auth config
 - [ ] Enable email confirmation in Supabase Auth settings
