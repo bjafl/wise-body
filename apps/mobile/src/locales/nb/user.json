@@ -1,0 +1,19 @@
+{
+  "profile": {
+    "title": "Profil",
+    "displayName": "Visningsnavn",
+    "email": "E-post",
+    "language": "Språk"
+  },
+  "settings": {
+    "title": "Innstillinger",
+    "appearance": "Utseende",
+    "language": "Språk",
+    "theme": "Tema",
+    "theme_light": "Lyst",
+    "theme_dark": "Mørkt",
+    "theme_system": "System",
+    "data": "Data",
+    "about": "Om appen"
+  }
+}

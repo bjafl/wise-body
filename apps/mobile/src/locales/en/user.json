@@ -1,0 +1,19 @@
+{
+  "profile": {
+    "title": "Profile",
+    "displayName": "Display name",
+    "email": "Email",
+    "language": "Language"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System",
+    "data": "Data",
+    "about": "About"
+  }
+}

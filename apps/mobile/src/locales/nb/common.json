@@ -1,0 +1,27 @@
+{
+  "app_name": "Wise Body",
+  "home_subtitle": "Din helseassistent",
+  "nav": {
+    "home": "Hjem",
+    "energy": "Energi",
+    "pain": "Smerte",
+    "mood": "Humør",
+    "settings": "Innstillinger"
+  },
+  "actions": {
+    "save": "Lagre",
+    "cancel": "Avbryt",
+    "back": "Tilbake",
+    "delete": "Slett",
+    "edit": "Rediger",
+    "next": "Neste",
+    "done": "Ferdig"
+  },
+  "errors": {
+    "generic": "Noe gikk galt"
+  },
+  "dates": {
+    "today": "I dag",
+    "yesterday": "I går"
+  }
+}

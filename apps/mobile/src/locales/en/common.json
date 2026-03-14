@@ -1,0 +1,27 @@
+{
+  "app_name": "Wise Body",
+  "home_subtitle": "Your health companion",
+  "nav": {
+    "home": "Home",
+    "energy": "Energy",
+    "pain": "Pain",
+    "mood": "Mood",
+    "settings": "Settings"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "delete": "Delete",
+    "edit": "Edit",
+    "next": "Next",
+    "done": "Done"
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  },
+  "dates": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  }
+}
