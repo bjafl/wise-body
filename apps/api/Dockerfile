@@ -9,6 +9,8 @@ WORKDIR /app
 # Copy workspace manifests first for better layer caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
+COPY apps/admin/package.json ./apps/admin/
+COPY apps/mobile/package.json ./apps/mobile/
 COPY packages/db/package.json ./packages/db/
 COPY packages/types/package.json ./packages/types/
 COPY packages/ui/package.json ./packages/ui/
