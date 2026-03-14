@@ -88,13 +88,8 @@ migrate name:
 migrate-deploy:
     pnpm --filter @wise-body/db exec prisma migrate deploy
 
-# Apply manual SQL (views + RLS) — run after migrate-deploy
-migrate-manual:
-    docker compose exec -T postgres psql -U $POSTGRES_USER -d $POSTGRES_DB < packages/db/prisma/sql/views.sql
-    docker compose exec -T postgres psql -U $POSTGRES_USER -d $POSTGRES_DB < packages/db/prisma/sql/rls.sql
-
-# Full migration run: deploy + manual SQL
-migrate-all: migrate-deploy migrate-manual
+# Full migration run (views included via Prisma migration)
+migrate-all: migrate-deploy
 
 # Roll back to a specific migration (dev only)
 migrate-reset:

@@ -29,14 +29,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Workspace node_modules (fastify, @prisma/client, pg, etc.)
+# @wise-body/db and @wise-body/types are bundled inline by tsup — not needed here.
 COPY --from=builder /app/node_modules ./node_modules
 
-# Built API bundle
+# Built API bundle (workspace deps inlined — self-contained ESM module)
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
-
-# Prisma workspace package source (needed so workspace symlinks resolve)
-COPY --from=builder /app/packages/db/src ./packages/db/src
-COPY --from=builder /app/packages/db/generated ./packages/db/generated
 
 # Prisma CLI config + migrations (for `prisma migrate deploy` on startup)
 COPY --from=builder /app/packages/db/prisma ./packages/db/prisma
