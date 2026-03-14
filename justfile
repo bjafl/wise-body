@@ -125,6 +125,19 @@ prod-down:
 prod-logs service="":
     docker compose logs -f {{service}}
 
+# Per-service log shortcuts
+logs-api:
+    docker compose logs -f api
+
+logs-web:
+    docker compose logs -f web
+
+logs-admin:
+    docker compose logs -f admin
+
+logs-db:
+    docker compose logs -f postgres
+
 # ─── Setup ────────────────────────────────────────────────────────────────────
 
 # First-time project setup
