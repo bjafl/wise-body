@@ -1,0 +1,28 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full background (fills edges for maskable safe zone) -->
+  <rect width="512" height="512" fill="url(#grad)"/>
+
+  <!-- Rounded inner panel (visual affordance for non-maskable display) -->
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#grad)"/>
+
+  <!-- Battery body outline -->
+  <rect x="68" y="178" width="308" height="172" rx="28"
+        fill="none" stroke="white" stroke-width="22" stroke-linejoin="round"/>
+
+  <!-- Battery terminal (right cap) -->
+  <rect x="376" y="218" width="38" height="92" rx="10" fill="white"/>
+
+  <!-- Battery fill (~65%) -->
+  <rect x="84" y="194" width="186" height="140" rx="18" fill="white"/>
+
+  <!-- Lightning bolt on fill area (darker green for contrast) -->
+  <path d="M192 218 L158 265 L182 265 L170 302 L206 255 L182 255 Z"
+        fill="#059669"/>
+</svg>
