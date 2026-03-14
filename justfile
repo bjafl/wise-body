@@ -22,6 +22,10 @@ dev-api: db-up
 dev-mobile:
     pnpm --filter @wise-body/mobile dev
 
+# Start only the admin panel
+dev-admin:
+    pnpm --filter @wise-body/admin dev
+
 # ─── Build ────────────────────────────────────────────────────────────────────
 
 build:

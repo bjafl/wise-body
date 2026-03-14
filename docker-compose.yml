@@ -34,6 +34,9 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       COOKIE_SECRET: ${COOKIE_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN}
+      ADMIN_CORS_ORIGIN: ${ADMIN_CORS_ORIGIN}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       LOG_LEVEL: ${LOG_LEVEL:-info}
     ports:
       - "${API_PORT:-3000}:3000"
@@ -49,6 +52,22 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+
+  # ── Admin panel ──────────────────────────────────────────────────────────────
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    restart: unless-stopped
+    ports:
+      - "${ADMIN_PORT:-8080}:80"
+    networks:
+      - frontend
+    depends_on:
+      api:
+        condition: service_healthy
 
   # ── Web (mobile PWA) ─────────────────────────────────────────────────────────
   web:
