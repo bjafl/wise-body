@@ -16,7 +16,7 @@ dev: db-up
 
 # Start only the API
 dev-api: db-up
-    pnpm --filter api dev
+    pnpm --filter @wise-body/api dev
 
 # Start only the mobile app
 dev-mobile:
@@ -107,6 +107,24 @@ studio:
 # Push schema directly without a migration file (prototyping only)
 db-push:
     pnpm --filter @wise-body/db exec prisma db push
+
+# ─── Production stack ────────────────────────────────────────────────────────
+
+# Build all Docker images (pass VITE_API_URL via env or --set)
+prod-build:
+    docker compose build
+
+# Start the full production stack (postgres + api + web)
+prod-up:
+    docker compose up -d
+
+# Stop the full production stack
+prod-down:
+    docker compose down
+
+# Tail logs for all services, or a specific one: just prod-logs api
+prod-logs service="":
+    docker compose logs -f {{service}}
 
 # ─── Setup ────────────────────────────────────────────────────────────────────
 
