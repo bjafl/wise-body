@@ -1,0 +1,10 @@
+# Local development overrides — merged automatically by `docker compose`.
+# Not used by Coolify (production only reads docker-compose.yml).
+#
+# Exposes postgres to the host so you can connect with psql, Prisma Studio,
+# or any DB client directly (e.g. TablePlus, DBeaver).
+
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
