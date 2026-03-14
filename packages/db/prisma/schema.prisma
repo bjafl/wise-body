@@ -1,0 +1,271 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum SyncStatus {
+  SYNCED
+  PENDING
+  CONFLICT
+}
+
+enum ModuleId {
+  ENERGY
+  PAIN
+  MOOD // reserved — not yet implemented
+}
+
+enum BudgetUnit {
+  POINTS
+  PERCENT
+}
+
+enum PainScale {
+  ONE // 0/1 — had pain or not
+  TEN // 1–10 numeric scale
+}
+
+enum BodySide {
+  LEFT
+  RIGHT
+  BOTH
+}
+
+// ─── User & Auth ──────────────────────────────────────────────────────────────
+
+// auth.users in Supabase would have been referenced here.
+// Since we're using custom Fastify auth: passwordHash is stored directly.
+// Access tokens are short-lived JWTs (no DB storage needed).
+// Refresh tokens are stored hashed in Session.
+//
+// Row access enforcement: every Prisma query must include `where: { userId }`.
+// See src/lib/userScoped.ts for the typed helper that enforces this at compile time.
+// A defense-in-depth Postgres RLS layer is configured in migrations/manual/rls.sql.
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  displayName  String?
+  locale       String   @default("nb")
+  passwordHash String   // bcrypt — never returned in API responses
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // GDPR: explicit consent required before health data collection (see SECURITY.md)
+  consentGiven   Boolean   @default(false)
+  consentAt      DateTime?
+  consentVersion String? // e.g. "2025-01"; bump when privacy policy changes
+
+  sessions          Session[]
+  onboardedModules  UserOnboardedModule[]
+  categories        Category[]
+  energyPreferences EnergyPreferences?
+  energyTemplates   EnergyActivityTemplate[]
+  energyEntries     EnergyEntry[]
+  painPreferences   PainPreferences?
+  painTemplates     PainLocationTemplate[]
+  painEntries       PainEntry[]
+}
+
+// Stores opaque refresh tokens (hashed). Rotate on every use.
+// Access tokens are JWTs verified by Fastify — no row here.
+model Session {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  tokenHash  String   @unique // SHA-256 of the refresh token sent to client
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+  userAgent  String?
+  ipAddress  String?  @db.VarChar(45) // covers IPv4 + IPv6
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt]) // for a periodic cleanup job: DELETE WHERE expiresAt < NOW()
+}
+
+// ─── Module Onboarding ────────────────────────────────────────────────────────
+
+model UserOnboardedModule {
+  userId      String   @db.Uuid
+  moduleId    ModuleId
+  onboardedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, moduleId])
+}
+
+// ─── Categories ───────────────────────────────────────────────────────────────
+
+// Shared across energy and pain modules. moduleId scopes categories to a module.
+model Category {
+  id           String     @id @default(uuid()) @db.Uuid
+  userId       String     @db.Uuid
+  moduleId     ModuleId
+  name         String
+  color        String?
+  icon         String?
+  sortOrder    Int        @default(0)
+  isDefault    Boolean    @default(false)
+  sourceLocale String? // locale used when seeding defaults, e.g. "nb"
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  syncStatus   SyncStatus @default(SYNCED)
+
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  energyTemplates EnergyActivityTemplate[]
+  painTemplates   PainLocationTemplate[]
+
+  @@index([userId, moduleId])
+}
+
+// ─── Energy Preferences ───────────────────────────────────────────────────────
+
+model EnergyPreferences {
+  id            String     @id @default(uuid()) @db.Uuid
+  userId        String     @unique @db.Uuid
+  dailyBudget   Int        @default(100)
+  budgetUnit    BudgetUnit @default(POINTS)
+  resetTime     String     @default("00:00") // "HH:MM" 24h
+  showWarningAt Int        @default(20) // % of budget remaining before warning
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  syncStatus    SyncStatus @default(SYNCED)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Energy Templates & Entries ───────────────────────────────────────────────
+
+model EnergyActivityTemplate {
+  id              String     @id @default(uuid()) @db.Uuid
+  userId          String     @db.Uuid
+  categoryId      String     @db.Uuid
+  name            String
+  /// Negative = expenditure, positive = gain
+  defaultCost     Int
+  defaultDuration Int? // minutes
+  icon            String?
+  isArchived      Boolean    @default(false)
+  isDefault       Boolean    @default(false)
+  sourceLocale    String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  syncStatus      SyncStatus @default(SYNCED)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+  entries  EnergyEntry[]
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+model EnergyEntry {
+  id         String     @id @default(uuid()) @db.Uuid
+  userId     String     @db.Uuid
+  templateId String     @db.Uuid
+  /// "YYYY-MM-DD" — string avoids timezone-shifting the logical calendar date
+  date       String     @db.VarChar(10)
+  timestamp  DateTime
+  /// Negative = expenditure, positive = gain
+  cost       Int
+  duration   Int? // minutes; may differ from template default
+  notes      String?    @db.VarChar(1000)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  syncStatus SyncStatus @default(SYNCED)
+
+  user     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template EnergyActivityTemplate @relation(fields: [templateId], references: [id])
+
+  @@index([userId, date])
+  @@index([userId, timestamp])
+}
+
+// ─── Pain Preferences ────────────────────────────────────────────────────────
+
+model PainPreferences {
+  id              String     @id @default(uuid()) @db.Uuid
+  userId          String     @unique @db.Uuid
+  scale           PainScale  @default(TEN)
+  defaultBodySide BodySide?
+  reminderTime    String? // "HH:MM" 24h; null = disabled
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  syncStatus      SyncStatus @default(SYNCED)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Pain Templates & Entries ─────────────────────────────────────────────────
+
+model PainLocationTemplate {
+  id           String     @id @default(uuid()) @db.Uuid
+  userId       String     @db.Uuid
+  categoryId   String     @db.Uuid
+  name         String
+  /// "head"|"neck"|"shoulder"|"arm"|"back"|"hip"|"leg"|"knee"|"foot"|"other"
+  /// Kept as String (not enum) — body regions will expand; enforce values in Zod
+  bodyRegion   String     @db.VarChar(32)
+  isArchived   Boolean    @default(false)
+  isDefault    Boolean    @default(false)
+  sourceLocale String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  syncStatus   SyncStatus @default(SYNCED)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+  entries  PainEntry[]
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+model PainEntry {
+  id                 String     @id @default(uuid()) @db.Uuid
+  userId             String     @db.Uuid
+  locationTemplateId String     @db.Uuid
+  /// "YYYY-MM-DD"
+  date               String     @db.VarChar(10)
+  timestamp          DateTime
+  /// Always stored on 1–10 scale; if scale=ONE, values are 0 or 10
+  intensity          Int
+  /// ["aching","burning","stabbing",...] — validated in Zod, stored as Postgres text[]
+  quality            String[]
+  notes              String?    @db.VarChar(1000)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  syncStatus         SyncStatus @default(SYNCED)
+
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locationTemplate PainLocationTemplate @relation(fields: [locationTemplateId], references: [id])
+
+  @@index([userId, date])
+  @@index([userId, timestamp])
+}
+
+// ─── Views (read-only derived data) ───────────────────────────────────────────
+
+/// Aggregated per-user per-day energy totals. Computed from EnergyEntry.
+/// Never write to this — query EnergyEntry to mutate data.
+/// Current daily budget comes from EnergyPreferences at query time, not stored here.
+/// SQL definition: migrations/manual/views.sql
+view EnergyDailySummary {
+  userId     String @db.Uuid
+  date       String @db.VarChar(10)
+  totalCost  Int
+  entryCount Int
+
+  @@unique([userId, date])
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@wise-body/db",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "migrate:manual": "psql $DATABASE_URL -f prisma/migrations/manual/views.sql -f prisma/migrations/manual/rls.sql",
+    "studio": "prisma studio",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.5.0",
+    "prisma": "^7.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
