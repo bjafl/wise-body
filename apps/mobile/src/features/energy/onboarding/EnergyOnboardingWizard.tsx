@@ -14,7 +14,6 @@ import { Button } from '@wise-body/ui/components/button'
 import {
   useEnergyOnboarding,
   type AbilityRating,
-  type OnboardingStep,
 } from './useEnergyOnboarding'
 
 const BELL_LEVELS = [

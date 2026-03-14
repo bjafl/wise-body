@@ -6,6 +6,7 @@ export interface RegisterRequest {
   password: string;
   displayName?: string;
   locale?: string;
+  consentGiven?: boolean;
 }
 
 export interface LoginRequest {
