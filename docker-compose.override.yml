@@ -1,10 +1,22 @@
 # Local development overrides — merged automatically by `docker compose`.
 # Not used by Coolify (production only reads docker-compose.yml).
 #
-# Exposes postgres to the host so you can connect with psql, Prisma Studio,
-# or any DB client directly (e.g. TablePlus, DBeaver).
+# Exposes all service ports to the host so you can reach them directly
+# without a Traefik proxy (e.g. for `just prod-up` local testing).
 
 services:
   postgres:
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
+
+  api:
+    ports:
+      - "${API_PORT:-3000}:3000"
+
+  admin:
+    ports:
+      - "${ADMIN_PORT:-8080}:80"
+
+  web:
+    ports:
+      - "${WEB_PORT:-8090}:80"
