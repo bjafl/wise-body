@@ -1,0 +1,27 @@
+# Dependencies — installed fresh inside the image
+**/node_modules
+
+# Git
+.git
+.gitignore
+
+# Build outputs — rebuilt inside the image
+**/dist
+**/.turbo
+
+# Prisma generated files — regenerated inside the image
+**/generated
+
+# Local env files — injected at runtime via Coolify / docker-compose env_file
+.env
+.env.*
+!.env.example
+
+# Dev tooling
+**/.eslintcache
+**/coverage
+**/*.log
+
+# OS
+.DS_Store
+Thumbs.db

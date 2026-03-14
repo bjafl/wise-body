@@ -1,12 +1,12 @@
 {
-  "name": "api",
+  "name": "@wise-body/api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup src/index.ts --format esm --dts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.mjs"
   },
   "keywords": [],
   "author": "",
