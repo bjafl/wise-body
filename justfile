@@ -142,6 +142,12 @@ logs-admin:
 logs-db:
     docker compose logs -f postgres
 
+# ─── shadcn/ui ────────────────────────────────────────────────────────────────
+
+# Add one or more shadcn components to the mobile app: just shadcn-add button card dialog
+shadcn-add +components:
+    pnpm dlx shadcn add {{components}} -c packages/ui
+
 # ─── Setup ────────────────────────────────────────────────────────────────────
 
 # First-time project setup
