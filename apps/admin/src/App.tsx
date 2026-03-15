@@ -26,7 +26,7 @@ function authFetch(path: string, token: string, init: RequestInit = {}) {
   return fetch(`${API}${path}`, {
     ...init,
     headers: {
-      'Content-Type': 'application/json',
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       Authorization: `Bearer ${token}`,
       ...init.headers,
     },
