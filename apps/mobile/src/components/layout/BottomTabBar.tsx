@@ -1,4 +1,3 @@
-import { Home } from "lucide-react"
 import { Link, useRouter } from "@tanstack/react-router"
 import { useMemo, type FC } from "react"
 import { isNavItemMeta } from "@/lib/navUtils"
@@ -10,28 +9,27 @@ const BottomNav: FC = () => {
     const children = router.routeTree.children
     if (!children) return []
     const routesNavMeta = Object.values(children)
-      .map((r) => r.options.staticData?.nav)
-      .filter(isNavItemMeta)
-    const routesNavPaths = Object.values(children).map((r) => r.path)
-    const routesNavData = routesNavMeta.map((meta, index) => ({
-      ...meta,
-      path: routesNavPaths[index],
-    }))
-    return routesNavData.sort((a, b) => a.order - b.order)
+      .map((r) => ({ nav: r.options.staticData?.nav, path: `/${r.path}` }))
+      .filter((meta) => isNavItemMeta(meta.nav))
+    // const routesNavPaths = Object.values(children).map((r) => r.path)
+    // const routesNavData = routesNavMeta.map((meta, index) => ({
+    //   ...meta,
+    //   path: routesNavPaths[index],
+    // }))
+    console.log({ routesNavMeta, children })
+    return routesNavMeta.sort((a, b) => a.nav.order - b.nav.order)
   }, [router.routeTree])
 
   return (
     <nav
-      className="flex border-t bg-background"
+      className="h-content flex items-center gap-4 border-t bg-background"
       style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
-      <Link to="/" className="sr-only">
-        <Home className="h-5 w-5" />
-        Hjem
-      </Link>
-
       {navRoutesData.map((route) => {
-        const { path, label, icon: Icon } = route
+        const {
+          path,
+          nav: { icon: Icon, label },
+        } = route
         return (
           <Link
             key={path}

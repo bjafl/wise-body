@@ -3,8 +3,8 @@ import type { NavItemMeta, StaticDataWithNavMeta } from "@/types/routing"
 export function isNavItemMeta(meta: any): meta is NavItemMeta {
   return (
     meta &&
+    "icon" in meta &&
     typeof meta.label === "string" &&
-    typeof meta.icon === "function" &&
     typeof meta.order === "number"
   )
 }
