@@ -11,7 +11,7 @@ import type {
   UpsertEnergyPreferencesRequest,
 } from '@wise-body/types'
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 
 export class ApiError extends Error {
   readonly status: number
@@ -37,7 +37,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     ...init,
     credentials: 'include', // send/receive the refresh token cookie
     headers: {
-      'Content-Type': 'application/json',
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(init.headers as Record<string, string> | undefined),
     },
