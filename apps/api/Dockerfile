@@ -30,9 +30,13 @@ FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Workspace node_modules (fastify, @prisma/client, pg, etc.)
-# @wise-body/db and @wise-body/types are bundled inline by tsup — not needed here.
+# Root node_modules — contains the pnpm virtual store (.pnpm/) that all
+# workspace symlinks point into.
 COPY --from=builder /app/node_modules ./node_modules
+
+# api's own node_modules — pnpm puts per-package symlinks here (not hoisted).
+# Node resolves @fastify/jwt etc. from apps/api/dist/ by walking up to this dir.
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 
 # Built API bundle (workspace deps inlined — self-contained ESM module)
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
