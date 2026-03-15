@@ -6,7 +6,7 @@ import { Button } from '@wise-body/ui/components/button'
 import { useAuthStore } from '@/store/authStore'
 import { api, ApiError } from '@/lib/api'
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute('/_auth/login')({
   component: LoginPage,
 })
 

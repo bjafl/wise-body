@@ -9,77 +9,77 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SettingsIndexRouteImport } from './routes/settings/index'
-import { Route as PainIndexRouteImport } from './routes/pain/index'
-import { Route as MoodIndexRouteImport } from './routes/mood/index'
-import { Route as EnergyIndexRouteImport } from './routes/energy/index'
-import { Route as EnergyOnboardingRouteImport } from './routes/energy/onboarding'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppPainIndexRouteImport } from './routes/_app/pain/index'
+import { Route as AppMoodIndexRouteImport } from './routes/_app/mood/index'
+import { Route as AppEnergyIndexRouteImport } from './routes/_app/energy/index'
+import { Route as AppEnergyOnboardingRouteImport } from './routes/_app/energy/onboarding'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsIndexRoute = SettingsIndexRouteImport.update({
-  id: '/settings/',
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/_auth/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/_app/settings/',
   path: '/settings/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PainIndexRoute = PainIndexRouteImport.update({
-  id: '/pain/',
+const AppPainIndexRoute = AppPainIndexRouteImport.update({
+  id: '/_app/pain/',
   path: '/pain/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MoodIndexRoute = MoodIndexRouteImport.update({
-  id: '/mood/',
+const AppMoodIndexRoute = AppMoodIndexRouteImport.update({
+  id: '/_app/mood/',
   path: '/mood/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnergyIndexRoute = EnergyIndexRouteImport.update({
-  id: '/energy/',
+const AppEnergyIndexRoute = AppEnergyIndexRouteImport.update({
+  id: '/_app/energy/',
   path: '/energy/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EnergyOnboardingRoute = EnergyOnboardingRouteImport.update({
-  id: '/energy/onboarding',
+const AppEnergyOnboardingRoute = AppEnergyOnboardingRouteImport.update({
+  id: '/_app/energy/onboarding',
   path: '/energy/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/energy/onboarding': typeof EnergyOnboardingRoute
-  '/energy/': typeof EnergyIndexRoute
-  '/mood/': typeof MoodIndexRoute
-  '/pain/': typeof PainIndexRoute
-  '/settings/': typeof SettingsIndexRoute
+  '/login': typeof AuthLoginRoute
+  '/energy/onboarding': typeof AppEnergyOnboardingRoute
+  '/energy/': typeof AppEnergyIndexRoute
+  '/mood/': typeof AppMoodIndexRoute
+  '/pain/': typeof AppPainIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/energy/onboarding': typeof EnergyOnboardingRoute
-  '/energy': typeof EnergyIndexRoute
-  '/mood': typeof MoodIndexRoute
-  '/pain': typeof PainIndexRoute
-  '/settings': typeof SettingsIndexRoute
+  '/login': typeof AuthLoginRoute
+  '/energy/onboarding': typeof AppEnergyOnboardingRoute
+  '/energy': typeof AppEnergyIndexRoute
+  '/mood': typeof AppMoodIndexRoute
+  '/pain': typeof AppPainIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/energy/onboarding': typeof EnergyOnboardingRoute
-  '/energy/': typeof EnergyIndexRoute
-  '/mood/': typeof MoodIndexRoute
-  '/pain/': typeof PainIndexRoute
-  '/settings/': typeof SettingsIndexRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_app/energy/onboarding': typeof AppEnergyOnboardingRoute
+  '/_app/energy/': typeof AppEnergyIndexRoute
+  '/_app/mood/': typeof AppMoodIndexRoute
+  '/_app/pain/': typeof AppPainIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -103,33 +103,26 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/login'
-    | '/energy/onboarding'
-    | '/energy/'
-    | '/mood/'
-    | '/pain/'
-    | '/settings/'
+    | '/_auth/login'
+    | '/_app/energy/onboarding'
+    | '/_app/energy/'
+    | '/_app/mood/'
+    | '/_app/pain/'
+    | '/_app/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginRoute: typeof LoginRoute
-  EnergyOnboardingRoute: typeof EnergyOnboardingRoute
-  EnergyIndexRoute: typeof EnergyIndexRoute
-  MoodIndexRoute: typeof MoodIndexRoute
-  PainIndexRoute: typeof PainIndexRoute
-  SettingsIndexRoute: typeof SettingsIndexRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AppEnergyOnboardingRoute: typeof AppEnergyOnboardingRoute
+  AppEnergyIndexRoute: typeof AppEnergyIndexRoute
+  AppMoodIndexRoute: typeof AppMoodIndexRoute
+  AppPainIndexRoute: typeof AppPainIndexRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -137,39 +130,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/settings/': {
-      id: '/settings/'
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
       path: '/settings'
       fullPath: '/settings/'
-      preLoaderRoute: typeof SettingsIndexRouteImport
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pain/': {
-      id: '/pain/'
+    '/_app/pain/': {
+      id: '/_app/pain/'
       path: '/pain'
       fullPath: '/pain/'
-      preLoaderRoute: typeof PainIndexRouteImport
+      preLoaderRoute: typeof AppPainIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mood/': {
-      id: '/mood/'
+    '/_app/mood/': {
+      id: '/_app/mood/'
       path: '/mood'
       fullPath: '/mood/'
-      preLoaderRoute: typeof MoodIndexRouteImport
+      preLoaderRoute: typeof AppMoodIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/energy/': {
-      id: '/energy/'
+    '/_app/energy/': {
+      id: '/_app/energy/'
       path: '/energy'
       fullPath: '/energy/'
-      preLoaderRoute: typeof EnergyIndexRouteImport
+      preLoaderRoute: typeof AppEnergyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/energy/onboarding': {
-      id: '/energy/onboarding'
+    '/_app/energy/onboarding': {
+      id: '/_app/energy/onboarding'
       path: '/energy/onboarding'
       fullPath: '/energy/onboarding'
-      preLoaderRoute: typeof EnergyOnboardingRouteImport
+      preLoaderRoute: typeof AppEnergyOnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -177,12 +177,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginRoute: LoginRoute,
-  EnergyOnboardingRoute: EnergyOnboardingRoute,
-  EnergyIndexRoute: EnergyIndexRoute,
-  MoodIndexRoute: MoodIndexRoute,
-  PainIndexRoute: PainIndexRoute,
-  SettingsIndexRoute: SettingsIndexRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AppEnergyOnboardingRoute: AppEnergyOnboardingRoute,
+  AppEnergyIndexRoute: AppEnergyIndexRoute,
+  AppMoodIndexRoute: AppMoodIndexRoute,
+  AppPainIndexRoute: AppPainIndexRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

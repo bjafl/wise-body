@@ -3,7 +3,7 @@ import { Smile } from 'lucide-react'
 import { PageContainer } from '@/components/layout/PageContainer'
 import type { NavItemMeta } from '@/types/routing'
 
-export const Route = createFileRoute('/mood/')({
+export const Route = createFileRoute('/_app/mood/')({
   staticData: {
     nav: { label: 'Humør', icon: Smile, order: 2 } satisfies NavItemMeta,
   },

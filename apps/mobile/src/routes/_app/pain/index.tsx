@@ -3,7 +3,7 @@ import { Activity } from 'lucide-react'
 import { PageContainer } from '@/components/layout/PageContainer'
 import type { NavItemMeta } from '@/types/routing'
 
-export const Route = createFileRoute('/pain/')({
+export const Route = createFileRoute('/_app/pain/')({
   staticData: {
     nav: { label: 'Smerte', icon: Activity, order: 3 } satisfies NavItemMeta,
   },

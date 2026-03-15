@@ -5,7 +5,7 @@ import { PageContainer } from '@/components/layout/PageContainer'
 import { useTheme } from '@/components/theme-provider'
 import type { NavItemMeta } from '@/types/routing'
 
-export const Route = createFileRoute('/settings/')({
+export const Route = createFileRoute('/_app/settings/')({
   staticData: {
     nav: { label: 'Innstillinger', icon: Settings, order: 4 } satisfies NavItemMeta,
   },

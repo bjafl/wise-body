@@ -16,7 +16,7 @@ import ActivityPicker from '@/features/energy/components/ActivityPicker'
 import type { NavItemMeta } from '@/types/routing'
 import type { EnergyActivityTemplateDto } from '@wise-body/types'
 
-export const Route = createFileRoute('/energy/')({
+export const Route = createFileRoute('/_app/energy/')({
   staticData: {
     nav: { label: 'Energi', icon: Battery, order: 1 } satisfies NavItemMeta,
   },
