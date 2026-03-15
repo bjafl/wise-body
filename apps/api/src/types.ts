@@ -2,7 +2,8 @@ import "@fastify/jwt"
 
 export interface JwtPayload {
   sub: string // userId
-  email: string
+  email?: string
+  role?: string
 }
 
 declare module "@fastify/jwt" {
