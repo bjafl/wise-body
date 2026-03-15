@@ -80,8 +80,12 @@ db-exec file:
 generate:
     pnpm --filter @wise-body/db generate
 
+# Create a new migration
+migrate:
+    pnpm --filter @wise-body/db exec prisma migrate dev
+
 # Create a new migration (prompts for a name)
-migrate name:
+migrate_name name:
     pnpm --filter @wise-body/db exec prisma migrate dev --name {{name}}
 
 # Apply pending migrations (CI / production)
