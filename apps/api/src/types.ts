@@ -1,18 +1,18 @@
-import '@fastify/jwt'
+import "@fastify/jwt"
 
 export interface JwtPayload {
-  sub: string  // userId
+  sub: string // userId
   email: string
 }
 
-declare module '@fastify/jwt' {
+declare module "@fastify/jwt" {
   interface FastifyJWT {
     payload: JwtPayload
     user: JwtPayload
   }
 }
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyRequest {
     userId: string
   }
