@@ -20,3 +20,7 @@ services:
   web:
     ports:
       - "${WEB_PORT:-8090}:80"
+
+networks:
+  backend:
+    internal: false
