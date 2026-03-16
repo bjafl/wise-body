@@ -7,7 +7,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { useEffect } from "react"
-import TopBar from "@/components/layout/TopBar"
 import BottomTabBar from "@/components/layout/BottomTabBar"
 import { useAuth } from "@/hooks/useAuth"
 import { useAuthStore } from "@/store/authStore"
