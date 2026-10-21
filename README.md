@@ -122,3 +122,7 @@ When Supabase is enabled, IndexedDB continues to function as a local cache for o
 - **iOS / Android** — via Capacitor (planned)
 
 All platform-specific APIs are abstracted behind `lib/platform.ts` to keep this transition low-friction.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
